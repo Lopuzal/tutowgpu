@@ -7,6 +7,7 @@ use winit::{
 };
 
 struct State {
+    color: wgpu::Color,
     surface: wgpu::Surface,
     device: wgpu::Device,
     queue: wgpu::Queue,
@@ -79,7 +80,10 @@ impl State {
         };
         surface.configure(&device, &config);
 
+        let color = wgpu::Color::BLUE;
+
         Self {
+            color,
             window,
             surface,
             device,
@@ -102,8 +106,16 @@ impl State {
         }
     }
 
+    // Float shenanigans here
     fn input(&mut self, event: &WindowEvent) -> bool {
-        false
+        match event {
+            WindowEvent::CursorMoved { device_id, position, .. } => {
+                self.color.r = position.x;
+                true
+            }
+            _ => false
+        }
+
     }
 
     fn update(&mut self) {
@@ -123,12 +135,7 @@ impl State {
                     view: &view,
                     resolve_target: None,
                     ops: wgpu::Operations {
-                        load: wgpu::LoadOp::Clear(wgpu::Color {
-                            r: 0.7,
-                            g: 0.2,
-                            b: 0.7,
-                            a: 1.0,
-                        }),
+                        load: wgpu::LoadOp::Clear(self.color),
                         store: wgpu::StoreOp::Store,
                     },
                 })],
@@ -226,6 +233,7 @@ pub async fn run() {
                     _ => {}
                 }
             }
+
             _ => {}
         }
     });
