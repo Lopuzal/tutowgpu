@@ -111,6 +111,7 @@ impl State {
         match event {
             WindowEvent::CursorMoved { device_id, position, .. } => {
                 self.color.r = position.x;
+                self.color.g = position.y;
                 true
             }
             _ => false
