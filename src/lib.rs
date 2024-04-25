@@ -109,9 +109,10 @@ impl State {
     // Float shenanigans here
     fn input(&mut self, event: &WindowEvent) -> bool {
         match event {
-            WindowEvent::CursorMoved { device_id, position, .. } => {
-                self.color.r = position.x;
-                self.color.g = position.y;
+            WindowEvent::CursorMoved { position, .. } => {
+                println!("{}", position.x);
+                self.color.r = position.x/self.size.width as f64;
+                self.color.g = position.y/self.size.height as f64;
                 true
             }
             _ => false
